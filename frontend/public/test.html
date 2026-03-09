@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        h1 { font-size: 2.5em; margin-bottom: 20px; }
+        p { font-size: 1.2em; margin: 10px 0; }
+        .success { color: #4ade80; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✅ Server is Working!</h1>
+        <p class="success">Vite Dev Server is running correctly</p>
+        <p>Port: 5173</p>
+        <p>If you see this page, the server is fine.</p>
+        <hr style="margin: 20px 0; opacity: 0.3;">
+        <p>The blank page issue is likely:</p>
+        <ul style="text-align: left; display: inline-block;">
+            <li>JavaScript error in React app</li>
+            <li>Browser cache issue</li>
+            <li>Missing dependency</li>
+        </ul>
+        <hr style="margin: 20px 0; opacity: 0.3;">
+        <p><strong>Next Step:</strong></p>
+        <p>Press F12 and check Console tab for errors</p>
+        <p>Then go back to: <a href="/" style="color: #4ade80;">http://localhost:5173/</a></p>
+    </div>
+    <script>
+        console.log('✅ JavaScript is working!');
+        console.log('✅ Server is responding');
+        console.log('If you see this in console, JS execution is fine');
+    </script>
+</body>
+</html>

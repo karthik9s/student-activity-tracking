@@ -1,0 +1,124 @@
+# Implementation Plan
+
+- [ ] 1. Write bug condition exploration test
+  - **Property 1: Fault Condition** - Student Fetch with Complete Filters
+  - **CRITICAL**: This test MUST FAIL on unfixed code - failure confirms the bug exists
+  - **DO NOT attempt to fix the test or the code when it fails**
+  - **NOTE**: This test encodes the expected behavior - it will validate the fix when it passes after implementation
+  - **GOAL**: Surface counterexamples that demonstrate the bug exists
+  - **Scoped PBT Approach**: Scope the property to concrete failing cases - valid allocations with existing students
+  - Test that `getStudentsByCourse(courseId, year, section)` returns students when called with valid allocation parameters (courseId="validCourse", year=1, section="A") where students exist in the database
+  - The test assertions should verify: result.length > 0, all students have matching courseId/year/section
+  - Run test on UNFIXED code
+  - **EXPECTED OUTCOME**: Test FAILS (returns empty list or wrong students - this is correct and proves the bug exists)
+  - Document counterexamples found: specific courseId/year/section combinations that return empty lists despite students existing
+  - Add logging to verify what parameters reach the service layer (may reveal null/undefined parameters)
+  - Test direct repository call to isolate whether issue is in service or repository layer
+  - Mark task complete when test is written, run, and failure is documented
+  - _Requirements: 1.1, 1.2, 1.3_
+
+- [ ] 2. Write preservation property tests (BEFORE implementing fix)
+  - **Property 2: Preservation** - Non-Student-Fetch Behavior
+  - **IMPORTANT**: Follow observation-first methodology
+  - Observe behavior on UNFIXED code for non-buggy operations:
+    - Allocation dropdown displays all allocated classes correctly
+    - Attendance records save with correct student/subject/faculty/course/year/section information
+    - Date selection and existing attendance record checking works
+    - Bulk actions (Mark All Present/Absent) update attendance status for displayed students
+    - "No students found" message displays when student list is legitimately empty
+  - Write property-based tests capturing observed behavior patterns:
+    - For all allocation display operations, dropdown populates correctly
+    - For all attendance save operations, records persist with correct data
+    - For all date selection operations, existing attendance checks work
+    - For all bulk action operations, attendance status updates correctly
+  - Property-based testing generates many test cases for stronger guarantees
+  - Run tests on UNFIXED code
+  - **EXPECTED OUTCOME**: Tests PASS (this confirms baseline behavior to preserve)
+  - Mark task complete when tests are written, run, and passing on unfixed code
+  - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5_
+
+- [ ] 3. Fix for student fetch filtering bug
+
+  - [ ] 3.1 Add diagnostic logging to identify root cause
+    - Add debug logging in `StudentService.getStudentsByCourse()` to log received parameters (courseId, year, section)
+    - Add logging in `FacultyController.getStudentsByCourse()` to log incoming request parameters
+    - Add logging to show which repository method is being called and with what parameters
+    - Add logging to show count of students returned from query
+    - Run the application and trigger the bug to examine logs
+    - Identify whether issue is: (1) parameters not passed from frontend, (2) parameters null/undefined at backend, (3) wrong repository method called, or (4) type mismatch in query
+    - _Bug_Condition: isBugCondition(input) where input.courseId IS NOT NULL AND input.year IS NOT NULL AND input.section IS NOT NULL AND studentsExistForCourseYearSection(input.courseId, input.year, input.section) AND fetchedStudents.length == 0_
+    - _Expected_Behavior: getStudentsByCourse returns students matching all three parameters (courseId, year, section)_
+    - _Preservation: Allocation display, attendance saving, date selection, bulk actions remain unchanged_
+    - _Requirements: 2.1, 2.2, 2.3_
+
+  - [ ] 3.2 Fix parameter passing in frontend (if needed)
+    - Verify `getFacultyStudents` in `frontend/src/api/endpoints/facultyApi.js` correctly passes year and section
+    - Ensure year is converted to number if backend expects Integer type
+    - Ensure section is passed as string
+    - Add console logging to verify params object before request
+    - _Bug_Condition: isBugCondition(input) from design_
+    - _Expected_Behavior: Frontend sends courseId, year, section correctly to backend_
+    - _Preservation: Preservation Requirements from design_
+    - _Requirements: 2.1_
+
+  - [ ] 3.3 Fix parameter handling in controller (if needed)
+    - Verify `FacultyController.getStudentsByCourse()` correctly binds @RequestParam for year and section
+    - Add parameter validation to ensure year and section are not null when they should be present
+    - Add request/response logging to verify parameter binding
+    - _Bug_Condition: isBugCondition(input) from design_
+    - _Expected_Behavior: Controller correctly receives and passes parameters to service_
+    - _Preservation: Preservation Requirements from design_
+    - _Requirements: 2.1_
+
+  - [ ] 3.4 Fix query logic in service layer
+    - Verify `StudentService.getStudentsByCourse()` calls correct repository method when year and section are non-null
+    - Ensure `findByCourseIdAndYearAndSectionAndDeletedAtIsNull` is invoked with correct parameters
+    - Add null checks and validation for required parameters
+    - Add warning logging if year or section is null when they should be present
+    - _Bug_Condition: isBugCondition(input) from design_
+    - _Expected_Behavior: Service queries database with all three parameters (courseId, year, section)_
+    - _Preservation: Preservation Requirements from design_
+    - _Requirements: 2.1, 2.2_
+
+  - [ ] 3.5 Verify data consistency (if needed)
+    - Check that student records in database have year/section values matching allocation records
+    - Verify no type mismatches between student data and allocation data (e.g., year as string vs integer)
+    - Verify no case sensitivity issues with section values ("A" vs "a")
+    - If data inconsistencies found, document them and create data migration script if needed
+    - _Bug_Condition: isBugCondition(input) from design_
+    - _Expected_Behavior: Student data matches allocation data for year/section values_
+    - _Preservation: Preservation Requirements from design_
+    - _Requirements: 2.2, 2.3_
+
+  - [ ] 3.6 Verify bug condition exploration test now passes
+    - **Property 1: Expected Behavior** - Student Fetch with Complete Filters
+    - **IMPORTANT**: Re-run the SAME test from task 1 - do NOT write a new test
+    - The test from task 1 encodes the expected behavior
+    - When this test passes, it confirms the expected behavior is satisfied
+    - Run bug condition exploration test from step 1
+    - **EXPECTED OUTCOME**: Test PASSES (confirms bug is fixed)
+    - Verify that `getStudentsByCourse(courseId, year, section)` now returns correct students for all test cases
+    - Verify all returned students match the filter criteria (courseId, year, section)
+    - _Requirements: 2.1, 2.2, 2.3_
+
+  - [ ] 3.7 Verify preservation tests still pass
+    - **Property 2: Preservation** - Non-Student-Fetch Behavior
+    - **IMPORTANT**: Re-run the SAME tests from task 2 - do NOT write new tests
+    - Run preservation property tests from step 2
+    - **EXPECTED OUTCOME**: Tests PASS (confirms no regressions)
+    - Confirm allocation display still works correctly
+    - Confirm attendance saving still works correctly
+    - Confirm date selection and existing attendance checks still work
+    - Confirm bulk actions still work correctly
+    - Confirm "No students found" message still displays when appropriate
+    - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5_
+
+- [ ] 4. Checkpoint - Ensure all tests pass
+  - Run all unit tests for StudentService, FacultyController, and StudentRepository
+  - Run all integration tests for attendance marking flow
+  - Run all property-based tests for fault condition and preservation
+  - Verify no test failures or regressions
+  - Test manually: select allocation → verify students display → mark attendance → verify save works
+  - Test with multiple allocations to ensure correct students fetched for each
+  - Test edge case: allocation with no students (should show "No students found" message)
+  - Ensure all tests pass, ask the user if questions arise

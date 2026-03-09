@@ -1,0 +1,301 @@
+.performance-view {
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.page-header h1 {
+  font-size: 28px;
+  color: #333;
+  margin-bottom: 30px;
+}
+
+.performance-overview {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+  margin-bottom: 30px;
+  display: flex;
+  gap: 40px;
+  align-items: center;
+}
+
+.gpa-card {
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  border: 6px solid;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.gpa-value {
+  font-size: 64px;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.gpa-label {
+  font-size: 16px;
+  color: #666;
+  margin-top: 10px;
+}
+
+.gpa-scale {
+  font-size: 12px;
+  color: #999;
+  margin-top: 5px;
+}
+
+.performance-stats {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.stat-card {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 25px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.stat-icon {
+  font-size: 40px;
+}
+
+.stat-content {
+  flex: 1;
+}
+
+.stat-value {
+  font-size: 32px;
+  font-weight: bold;
+  color: #333;
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 14px;
+  color: #666;
+  margin-top: 5px;
+}
+
+.grade-distribution {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  margin-bottom: 30px;
+}
+
+.grade-distribution h2 {
+  font-size: 20px;
+  color: #333;
+  margin-bottom: 25px;
+}
+
+.grades-grid {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.grade-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f8f9fa;
+  padding: 15px 20px;
+  border-radius: 8px;
+}
+
+.grade-badge {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.grade-count {
+  font-size: 14px;
+  color: #666;
+}
+
+.subject-wise-performance {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  margin-bottom: 30px;
+}
+
+.subject-wise-performance h2 {
+  font-size: 20px;
+  color: #333;
+  margin-bottom: 25px;
+}
+
+.subjects-performance-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.subject-performance-card {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 8px;
+  padding: 25px;
+  text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.subject-performance-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.subject-performance-card h3 {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 15px;
+  min-height: 40px;
+}
+
+.subject-grade {
+  font-size: 48px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.subject-percentage {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.subject-assessments {
+  font-size: 14px;
+  color: #999;
+}
+
+.performance-records {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+}
+
+.records-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.records-header h2 {
+  font-size: 20px;
+  color: #333;
+  margin: 0;
+}
+
+.subject-filter {
+  padding: 8px 15px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+.performance-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.performance-table thead {
+  background-color: #f8f9fa;
+}
+
+.performance-table th {
+  padding: 15px;
+  text-align: left;
+  font-weight: 600;
+  color: #495057;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.performance-table td {
+  padding: 15px;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.performance-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.grade-badge-small {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+  display: inline-block;
+}
+
+.no-data {
+  text-align: center;
+  color: #6c757d;
+  padding: 40px !important;
+}
+
+.loading {
+  text-align: center;
+  padding: 60px;
+  font-size: 18px;
+  color: #6c757d;
+}
+
+@media (max-width: 768px) {
+  .performance-overview {
+    flex-direction: column;
+  }
+
+  .performance-stats {
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+
+  .subjects-performance-grid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  }
+
+  .records-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .subject-filter {
+    width: 100%;
+  }
+
+  .performance-table {
+    min-width: 700px;
+  }
+}

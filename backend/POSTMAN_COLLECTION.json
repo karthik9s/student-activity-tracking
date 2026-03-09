@@ -1,0 +1,301 @@
+{
+  "info": {
+    "name": "Student Activity Tracking System API",
+    "description": "Complete API collection for testing all endpoints",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "accessToken",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@college.edu\",\n  \"password\": \"admin123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/refresh",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "refresh"]
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{accessToken}}"}
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/logout",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "logout"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin - Students",
+      "item": [
+        {
+          "name": "Get All Students",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{accessToken}}"}
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/students?page=0&size=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "students"],
+              "query": [
+                {"key": "page", "value": "0"},
+                {"key": "size", "value": "10"}
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Student",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rollNumber\": \"2024001\",\n  \"name\": \"John Doe\",\n  \"email\": \"john@college.edu\",\n  \"phone\": \"1234567890\",\n  \"courseId\": \"course-id\",\n  \"year\": 1,\n  \"section\": \"A\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/students",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "students"]
+            }
+          }
+        },
+        {
+          "name": "Update Student",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Updated\",\n  \"email\": \"john.updated@college.edu\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/students/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "students", ":id"],
+              "variable": [{"key": "id", "value": "student-id"}]
+            }
+          }
+        },
+        {
+          "name": "Delete Student",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{accessToken}}"}
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/students/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "students", ":id"],
+              "variable": [{"key": "id", "value": "student-id"}]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin - Faculty",
+      "item": [
+        {
+          "name": "Get All Faculty",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{accessToken}}"}
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/faculty?page=0&size=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "faculty"],
+              "query": [
+                {"key": "page", "value": "0"},
+                {"key": "size", "value": "10"}
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Faculty",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"employeeId\": \"FAC001\",\n  \"name\": \"Dr. Smith\",\n  \"email\": \"smith@college.edu\",\n  \"phone\": \"9876543210\",\n  \"department\": \"Computer Science\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/faculty",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "faculty"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Faculty - Attendance",
+      "item": [
+        {
+          "name": "Mark Attendance",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"studentId\": \"student-id\",\n  \"subjectId\": \"subject-id\",\n  \"date\": \"2024-01-15\",\n  \"present\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/faculty/attendance",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "faculty", "attendance"]
+            }
+          }
+        },
+        {
+          "name": "Get Attendance by Subject",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{accessToken}}"}
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/faculty/attendance/subject/:subjectId",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "faculty", "attendance", "subject", ":subjectId"],
+              "variable": [{"key": "subjectId", "value": "subject-id"}]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Faculty - Performance",
+      "item": [
+        {
+          "name": "Create Performance Record",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"studentId\": \"student-id\",\n  \"subjectId\": \"subject-id\",\n  \"assessmentType\": \"MIDTERM\",\n  \"obtainedMarks\": 85,\n  \"maxMarks\": 100\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/faculty/performance",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "faculty", "performance"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Student - My Data",
+      "item": [
+        {
+          "name": "Get My Attendance",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{accessToken}}"}
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/student/attendance",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "student", "attendance"]
+            }
+          }
+        },
+        {
+          "name": "Get My Performance",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{accessToken}}"}
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/student/performance",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "student", "performance"]
+            }
+          }
+        },
+        {
+          "name": "Get My Dashboard",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{accessToken}}"}
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/student/dashboard",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "student", "dashboard"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

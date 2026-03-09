@@ -1,0 +1,23 @@
+{
+  "name": "student-activity-tracker-seeding",
+  "version": "1.0.0",
+  "description": "Database seeding scripts for Student Activity Tracking System",
+  "main": "seed-data.js",
+  "scripts": {
+    "seed:subjects": "node seed-subjects-data.js",
+    "seed:demo": "node seed-complete-demo-data.js",
+    "seed:all": "npm run seed:subjects && npm run seed:demo",
+    "test": "echo \"Run npm run seed:all to populate database with demo data\""
+  },
+  "keywords": [
+    "mongodb",
+    "seeding",
+    "student-tracker"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "mongodb": "^6.3.0",
+    "bcryptjs": "^2.4.3"
+  }
+}
