@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Student Activity & Academic Tracking System
 
 A comprehensive full-stack web application for B.Tech colleges to manage student activities, attendance tracking, performance monitoring, and analytics.
@@ -306,3 +307,6 @@ This project is developed for educational purposes.
 ## Support
 
 For issues and questions, please refer to the project documentation or create an issue in the repository.
+=======
+# student-activity-tracking
+>>>>>>> f942a2b6c13ceecc59bc3a97872e95a04d740a3f
