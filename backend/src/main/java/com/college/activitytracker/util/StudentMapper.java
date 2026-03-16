@@ -16,8 +16,7 @@ public class StudentMapper {
         StudentDTO dto = new StudentDTO();
         dto.setId(student.getId());
         dto.setRollNumber(student.getRollNumber());
-        dto.setFirstName(student.getFirstName());
-        dto.setLastName(student.getLastName());
+        dto.setName(student.getName());
         dto.setEmail(student.getEmail());
         dto.setPhone(student.getPhone());
         dto.setDateOfBirth(student.getDateOfBirth());
@@ -39,8 +38,7 @@ public class StudentMapper {
         Student student = new Student();
         student.setId(dto.getId());
         student.setRollNumber(dto.getRollNumber());
-        student.setFirstName(dto.getFirstName());
-        student.setLastName(dto.getLastName());
+        student.setName(dto.getName());
         student.setEmail(dto.getEmail());
         student.setPhone(dto.getPhone());
         student.setDateOfBirth(dto.getDateOfBirth());
@@ -59,8 +57,7 @@ public class StudentMapper {
         }
         
         student.setRollNumber(dto.getRollNumber());
-        student.setFirstName(dto.getFirstName());
-        student.setLastName(dto.getLastName());
+        student.setName(dto.getName());
         student.setEmail(dto.getEmail());
         student.setPhone(dto.getPhone());
         student.setDateOfBirth(dto.getDateOfBirth());

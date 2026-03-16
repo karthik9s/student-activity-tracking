@@ -11,13 +11,9 @@ public class StudentDTO {
     @NotBlank(message = "Roll number is required")
     private String rollNumber;
     
-    @NotBlank(message = "First name is required")
-    @Size(min = 2, max = 50, message = "First name must be between 2 and 50 characters")
-    private String firstName;
-    
-    @NotBlank(message = "Last name is required")
-    @Size(min = 2, max = 50, message = "Last name must be between 2 and 50 characters")
-    private String lastName;
+    @NotBlank(message = "Name is required")
+    @Size(min = 2, max = 100, message = "Name must be between 2 and 100 characters")
+    private String name;
     
     @NotBlank(message = "Email is required")
     @Email(message = "Email should be valid")
@@ -50,14 +46,13 @@ public class StudentDTO {
     public StudentDTO() {
     }
 
-    public StudentDTO(String id, String rollNumber, String firstName, String lastName, 
+    public StudentDTO(String id, String rollNumber, String name,
                      String email, String phone, LocalDate dateOfBirth, String courseId, 
                      String courseName, Integer year, String section, String profileImage, 
                      Boolean isActive) {
         this.id = id;
         this.rollNumber = rollNumber;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.name = name;
         this.email = email;
         this.phone = phone;
         this.dateOfBirth = dateOfBirth;
@@ -85,20 +80,12 @@ public class StudentDTO {
         this.rollNumber = rollNumber;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getName() {
+        return name;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {

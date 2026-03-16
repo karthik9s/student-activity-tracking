@@ -37,6 +37,7 @@ public class ClassAllocationDTO {
     
     private String facultyName;
     private String subjectName;
+    private String subjectCode;
     private String courseName;
     
     private LocalDateTime createdAt;
@@ -48,7 +49,7 @@ public class ClassAllocationDTO {
     public ClassAllocationDTO(String id, String facultyId, String subjectId, String courseId, 
                              Integer year, String section, String academicYear, String semester, 
                              Boolean isActive, String facultyName, String subjectName, 
-                             String courseName, LocalDateTime createdAt, LocalDateTime updatedAt) {
+                             String subjectCode, String courseName, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.facultyId = facultyId;
         this.subjectId = subjectId;
@@ -60,6 +61,7 @@ public class ClassAllocationDTO {
         this.isActive = isActive;
         this.facultyName = facultyName;
         this.subjectName = subjectName;
+        this.subjectCode = subjectCode;
         this.courseName = courseName;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -151,6 +153,14 @@ public class ClassAllocationDTO {
 
     public void setSubjectName(String subjectName) {
         this.subjectName = subjectName;
+    }
+
+    public String getSubjectCode() {
+        return subjectCode;
+    }
+
+    public void setSubjectCode(String subjectCode) {
+        this.subjectCode = subjectCode;
     }
 
     public String getCourseName() {

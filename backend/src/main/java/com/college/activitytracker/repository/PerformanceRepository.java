@@ -28,6 +28,8 @@ public interface PerformanceRepository extends MongoRepository<Performance, Stri
     List<Performance> findByClassAndSubjectAndExamType(
             String courseId, Integer year, String section, String subjectId, String examType);
     
+    List<Performance> findBySubjectId(String subjectId);
+
     Page<Performance> findBySubjectId(String subjectId, Pageable pageable);
     
     @Query("{ 'studentId': ?0, 'subjectId': ?1 }")

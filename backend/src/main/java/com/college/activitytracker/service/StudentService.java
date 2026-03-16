@@ -196,6 +196,18 @@ public class StudentService {
         return studentRepository.countByDeletedAtIsNull();
     }
 
+    public java.util.List<java.util.Map<String, Object>> searchByRollNumber(String rollNumber) {
+        return studentRepository.findByRollNumberContaining(rollNumber).stream()
+                .map(s -> {
+                    java.util.Map<String, Object> result = new java.util.HashMap<>();
+                    result.put("studentId", s.getId());
+                    result.put("name", s.getName());
+                    result.put("rollNumber", s.getRollNumber());
+                    return result;
+                })
+                .collect(java.util.stream.Collectors.toList());
+    }
+
     private String getCurrentUserId() {
 
         try {
@@ -224,8 +236,7 @@ public class StudentService {
         map.put("id", student.getId());
         map.put("userId", student.getUserId());
         map.put("rollNumber", student.getRollNumber());
-        map.put("firstName", student.getFirstName());
-        map.put("lastName", student.getLastName());
+        map.put("name", student.getName());
         map.put("email", student.getEmail());
         map.put("phone", student.getPhone());
         map.put("courseId", student.getCourseId());

@@ -32,7 +32,7 @@ public interface StudentRepository extends MongoRepository<Student, String> {
     @Query("{ 'isActive': ?0, 'deletedAt': null }")
     Page<Student> findByIsActive(Boolean isActive, Pageable pageable);
     
-    @Query("{ '$or': [ { 'firstName': { '$regex': ?0, '$options': 'i' } }, { 'lastName': { '$regex': ?0, '$options': 'i' } }, { 'email': { '$regex': ?0, '$options': 'i' } }, { 'rollNumber': { '$regex': ?0, '$options': 'i' } } ], 'deletedAt': null }")
+    @Query("{ '$or': [ { 'name': { '$regex': ?0, '$options': 'i' } }, { 'email': { '$regex': ?0, '$options': 'i' } }, { 'rollNumber': { '$regex': ?0, '$options': 'i' } } ], 'deletedAt': null }")
     Page<Student> searchStudents(String searchTerm, Pageable pageable);
     
     long countByDeletedAtIsNull();
@@ -53,5 +53,7 @@ public interface StudentRepository extends MongoRepository<Student, String> {
     @Query("{ 'courseId': ?0, 'deletedAt': null }")
     java.util.List<Student> findByCourseIdAndDeletedAtIsNull(String courseId);
 
+    @Query("{ 'rollNumber': { '$regex': ?0, '$options': 'i' }, 'deletedAt': null }")
+    java.util.List<Student> findByRollNumberContaining(String rollNumber);
 
 }

@@ -247,7 +247,7 @@ const AttendanceMarking = () => {
                     {students.map(student => (
                       <tr key={student.id}>
                         <td>{student.rollNumber}</td>
-                        <td>{student.firstName} {student.lastName}</td>
+                        <td>{student.name || student.firstName + ' ' + student.lastName || student.rollNumber}</td>
                         <td>{student.email}</td>
                         <td>
                           <div className="attendance-toggle">

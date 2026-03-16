@@ -28,7 +28,7 @@ public class PerformanceDTO {
     private String semester;
     
     @NotBlank(message = "Exam type is required")
-    @Pattern(regexp = "INTERNAL|ASSIGNMENT|EXAM", message = "Exam type must be INTERNAL, ASSIGNMENT, or EXAM")
+    @Pattern(regexp = "INTERNAL|ASSIGNMENT|EXAM|FINAL", message = "Exam type must be INTERNAL, ASSIGNMENT, EXAM, or FINAL")
     private String examType;
     
     @NotNull(message = "Marks obtained is required")
@@ -47,6 +47,7 @@ public class PerformanceDTO {
     
     private String studentName;
     private String subjectName;
+    private String rollNumber;
     
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -208,6 +209,14 @@ public class PerformanceDTO {
 
     public void setSubjectName(String subjectName) {
         this.subjectName = subjectName;
+    }
+
+    public String getRollNumber() {
+        return rollNumber;
+    }
+
+    public void setRollNumber(String rollNumber) {
+        this.rollNumber = rollNumber;
     }
 
     public LocalDateTime getCreatedAt() {

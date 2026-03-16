@@ -6,7 +6,7 @@ const { MongoClient, ObjectId } = require('mongodb');
 const bcrypt = require('bcryptjs');
 
 // MongoDB connection string - UPDATE THIS
-const MONGODB_URI = 'mongodb+srv://surasani_karthik_reddy:mamayya123@cluster0.wzxks5z.mongodb.net/studentDB?retryWrites=true&w=majority';
+const MONGODB_URI = 'mongodb+srv://surasani_karthik_reddy:mamayya123@cluster0.wzxks5z.mongodb.net/student_tracker?retryWrites=true&w=majority';
 
 // Helper function to hash passwords
 async function hashPassword(password) {

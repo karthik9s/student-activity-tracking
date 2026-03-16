@@ -72,6 +72,12 @@ public class PerformanceService {
                 .collect(Collectors.toList());
     }
 
+    public List<PerformanceDTO> getPerformanceBySubject(String subjectId) {
+        return performanceRepository.findBySubjectId(subjectId).stream()
+                .map(this::mapEntityToDto)
+                .collect(Collectors.toList());
+    }
+
     public PerformanceDTO getPerformanceById(String id) {
         Performance performance = performanceRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Performance not found"));
@@ -186,7 +192,10 @@ public class PerformanceService {
         dto.setCreatedBy(entity.getCreatedBy());
         
         studentRepository.findById(entity.getStudentId())
-                .ifPresent(s -> dto.setStudentName(s.getFirstName() + " " + s.getLastName()));
+                .ifPresent(s -> {
+                    dto.setStudentName(s.getName());
+                    dto.setRollNumber(s.getRollNumber());
+                });
         subjectRepository.findById(entity.getSubjectId())
                 .ifPresent(s -> dto.setSubjectName(s.getName()));
         

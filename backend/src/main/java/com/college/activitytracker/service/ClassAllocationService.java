@@ -157,7 +157,10 @@ public class ClassAllocationService {
         facultyRepository.findById(entity.getFacultyId())
                 .ifPresent(f -> dto.setFacultyName(f.getFirstName() + " " + f.getLastName()));
         subjectRepository.findById(entity.getSubjectId())
-                .ifPresent(s -> dto.setSubjectName(s.getName()));
+                .ifPresent(s -> {
+                    dto.setSubjectName(s.getName());
+                    dto.setSubjectCode(s.getCode());
+                });
         courseRepository.findById(entity.getCourseId())
                 .ifPresent(c -> dto.setCourseName(c.getName()));
         

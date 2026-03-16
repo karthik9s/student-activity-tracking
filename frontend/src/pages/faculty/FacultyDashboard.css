@@ -16,8 +16,9 @@
 
 .allocations-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 1.5rem;
+  width: 100%;
 }
 
 .allocation-card {
@@ -58,4 +59,13 @@
   min-height: 400px;
   font-size: 1.2rem;
   color: #666;
+}
+
+.my-allocations.highlight {
+  animation: highlightPulse 2s ease-in-out;
+}
+
+@keyframes highlightPulse {
+  0%, 100% { background-color: transparent; }
+  50% { background-color: rgba(74, 144, 226, 0.1); }
 }

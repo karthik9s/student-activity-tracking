@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import Navbar from '../../components/layout/Navbar';
 import AttendanceView from './AttendanceView';
 import PerformanceView from './PerformanceView';
 import SubjectsView from './SubjectsView';
 import { getMyDashboardStats } from '../../api/endpoints/performanceApi';
+import { getMyAttendance, getMyAttendanceSummary } from '../../api/endpoints/attendanceApi';
 import './StudentDashboard.css';
 
 const StudentDashboard = () => {
@@ -30,6 +31,38 @@ const StudentDashboard = () => {
       console.error('Failed to fetch stats', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDownloadReport = async () => {
+    try {
+      const [attendanceRes, summaryRes] = await Promise.all([
+        getMyAttendance(),
+        getMyAttendanceSummary()
+      ]);
+
+      const records = attendanceRes.data;
+      const summary = summaryRes.data;
+
+      let csv = `Student Attendance Report\nOverall Attendance: ${summary.overallPercentage?.toFixed(1)}%\nTotal Classes: ${summary.totalClasses} | Attended: ${summary.attendedClasses}\n\n`;
+      csv += 'Date,Subject,Status\n';
+      records
+        .sort((a, b) => new Date(b.date) - new Date(a.date))
+        .forEach(r => {
+          csv += `${new Date(r.date).toLocaleDateString()},${r.subjectName || ''},${r.status}\n`;
+        });
+
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `attendance-report-${new Date().toISOString().split('T')[0]}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Failed to download report', error);
     }
   };
 
@@ -107,7 +140,7 @@ const StudentDashboard = () => {
             <span className="link-icon">📋</span>
             <span>View Subjects</span>
           </Link>
-          <button className="link-btn">
+          <button className="link-btn" onClick={handleDownloadReport}>
             <span className="link-icon">📄</span>
             <span>Download Reports</span>
           </button>

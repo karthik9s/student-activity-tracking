@@ -20,8 +20,8 @@ const PerformanceView = () => {
         getMyPerformance(),
         getMyPerformanceSummary()
       ]);
-      setPerformance(performanceRes.data);
-      setSummary(summaryRes.data);
+      setPerformance(performanceRes.data || []);
+      setSummary(summaryRes.data || null);
     } catch (error) {
       toast.error('Failed to fetch performance data');
       console.error(error);
@@ -70,9 +70,9 @@ const PerformanceView = () => {
       {summary && (
         <>
           <div className="performance-overview">
-            <div className="gpa-card" style={{ borderColor: getGPAColor(summary.gpa) }}>
-              <div className="gpa-value" style={{ color: getGPAColor(summary.gpa) }}>
-                {summary.gpa.toFixed(2)}
+            <div className="gpa-card" style={{ borderColor: getGPAColor(summary.gpa || 0) }}>
+              <div className="gpa-value" style={{ color: getGPAColor(summary.gpa || 0) }}>
+                {(summary.gpa || 0).toFixed(2)}
               </div>
               <div className="gpa-label">Current GPA</div>
               <div className="gpa-scale">Out of 10.0</div>
@@ -82,14 +82,14 @@ const PerformanceView = () => {
               <div className="stat-card">
                 <div className="stat-icon">📚</div>
                 <div className="stat-content">
-                  <div className="stat-value">{summary.totalSubjects}</div>
+                  <div className="stat-value">{summary.totalSubjects || 0}</div>
                   <div className="stat-label">Total Subjects</div>
                 </div>
               </div>
               <div className="stat-card">
                 <div className="stat-icon">📊</div>
                 <div className="stat-content">
-                  <div className="stat-value">{summary.averagePercentage.toFixed(1)}%</div>
+                  <div className="stat-value">{(summary.averagePercentage || 0).toFixed(1)}%</div>
                   <div className="stat-label">Average Percentage</div>
                 </div>
               </div>
@@ -130,7 +130,7 @@ const PerformanceView = () => {
                     {subject.bestGrade}
                   </div>
                   <div className="subject-percentage">
-                    Average: {subject.averagePercentage.toFixed(1)}%
+                    Average: {(subject.averagePercentage || 0).toFixed(1)}%
                   </div>
                   <div className="subject-assessments">
                     {subject.totalAssessments} assessment{subject.totalAssessments !== 1 ? 's' : ''}
@@ -185,7 +185,7 @@ const PerformanceView = () => {
                       <td>{record.subjectName}</td>
                       <td>{record.examType}</td>
                       <td>{record.marksObtained} / {record.totalMarks}</td>
-                      <td>{record.percentage.toFixed(1)}%</td>
+                      <td>{(record.percentage || 0).toFixed(1)}%</td>
                       <td>
                         <span
                           className="grade-badge-small"

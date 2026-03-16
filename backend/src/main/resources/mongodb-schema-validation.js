@@ -510,8 +510,8 @@ db.runCommand({
           description: 'must be a string or null'
         },
         examType: {
-          enum: ['INTERNAL', 'ASSIGNMENT', 'MID_TERM', 'END_TERM'],
-          description: 'must be one of: INTERNAL, ASSIGNMENT, MID_TERM, END_TERM'
+          enum: ['INTERNAL', 'ASSIGNMENT', 'EXAM', 'FINAL'],
+          description: 'must be one of: INTERNAL, ASSIGNMENT, EXAM, FINAL'
         },
         marksObtained: {
           bsonType: 'double',

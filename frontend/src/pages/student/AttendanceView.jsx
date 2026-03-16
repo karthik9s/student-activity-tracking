@@ -141,13 +141,12 @@ const AttendanceView = () => {
                 <th>Date</th>
                 <th>Subject</th>
                 <th>Status</th>
-                <th>Remarks</th>
               </tr>
             </thead>
             <tbody>
               {getFilteredAttendance().length === 0 ? (
                 <tr>
-                  <td colSpan="4" className="no-data">No attendance records found</td>
+                  <td colSpan="3" className="no-data">No attendance records found</td>
                 </tr>
               ) : (
                 getFilteredAttendance()
@@ -161,7 +160,6 @@ const AttendanceView = () => {
                           {record.status === 'PRESENT' ? '✓ Present' : '✗ Absent'}
                         </span>
                       </td>
-                      <td>{record.remarks || '-'}</td>
                     </tr>
                   ))
               )}

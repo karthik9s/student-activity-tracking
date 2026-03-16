@@ -30,9 +30,9 @@ const PerformanceEntry = () => {
   const [loading, setLoading] = useState(false);
 
   const examTypes = [
-    { value: 'INTERNAL', label: 'Internal Exam' },
+    { value: 'INTERNAL', label: 'Internal Assessment' },
     { value: 'ASSIGNMENT', label: 'Assignment' },
-    { value: 'EXAM', label: 'Final Exam' }
+    { value: 'EXAM', label: 'Semester Exam' }
   ];
 
   useEffect(() => {
@@ -85,6 +85,7 @@ const PerformanceEntry = () => {
   const handleAllocationChange = (e, setFieldValue) => {
     const allocation = allocations.find(a => a.id === e.target.value);
     setSelectedAllocation(allocation);
+    setFieldValue('allocationId', e.target.value);
     setFieldValue('studentId', '');
     setStudents([]);
     setPerformanceRecords([]);
@@ -144,7 +145,8 @@ const PerformanceEntry = () => {
       await addPerformance(performanceData);
       toast.success('Performance added successfully');
       resetForm();
-      fetchPerformanceRecords();
+      // Refresh performance records to show the newly added entry
+      await fetchPerformanceRecords();
     } catch (error) {
       toast.error(error.response?.data?.message || 'Failed to add performance');
       console.error(error);

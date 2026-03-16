@@ -161,7 +161,7 @@ public class AttendanceService {
         dto.setCreatedBy(entity.getCreatedBy());
         
         studentRepository.findById(entity.getStudentId())
-                .ifPresent(s -> dto.setStudentName(s.getFirstName() + " " + s.getLastName()));
+                .ifPresent(s -> dto.setStudentName(s.getName()));
         subjectRepository.findById(entity.getSubjectId())
                 .ifPresent(s -> dto.setSubjectName(s.getName()));
         facultyRepository.findById(entity.getFacultyId())

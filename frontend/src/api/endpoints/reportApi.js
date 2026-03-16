@@ -18,6 +18,18 @@ export const getLowAttendanceList = (params = {}) => {
   return axios.get('/faculty/reports/low-attendance', { params });
 };
 
+export const getAttendanceReport = (params = {}) => {
+  return axios.get('/faculty/reports/attendance', { params })
+    .then((response) => {
+      console.log("Attendance Report:", response.data);
+      return response;
+    })
+    .catch((error) => {
+      console.error("Error fetching attendance report:", error);
+      throw error;
+    });
+};
+
 export const exportAttendanceCSV = (params = {}) => {
   return axios.get('/faculty/reports/attendance/csv', {
     params,

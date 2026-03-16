@@ -38,7 +38,7 @@ public class ExcelUploadService {
     
     // Expected column headers
     private static final String[] EXPECTED_HEADERS = {
-        "Roll Number", "First Name", "Last Name", "Email", "Phone", 
+        "Roll Number", "Name", "Email", "Phone", 
         "Date of Birth", "Course Code", "Year", "Section"
     };
 
@@ -150,13 +150,12 @@ public class ExcelUploadService {
         
         try {
             student.setRollNumber(getCellValue(row.getCell(0)).trim());
-            student.setFirstName(getCellValue(row.getCell(1)).trim());
-            student.setLastName(getCellValue(row.getCell(2)).trim());
-            student.setEmail(getCellValue(row.getCell(3)).trim());
-            student.setPhone(getCellValue(row.getCell(4)).trim());
+            student.setName(getCellValue(row.getCell(1)).trim());
+            student.setEmail(getCellValue(row.getCell(2)).trim());
+            student.setPhone(getCellValue(row.getCell(3)).trim());
             
             // Parse date of birth
-            Cell dobCell = row.getCell(5);
+            Cell dobCell = row.getCell(4);
             if (dobCell != null) {
                 if (dobCell.getCellType() == CellType.NUMERIC && DateUtil.isCellDateFormatted(dobCell)) {
                     Date date = dobCell.getDateCellValue();
@@ -169,16 +168,15 @@ public class ExcelUploadService {
                 }
             }
             
-            String courseCode = getCellValue(row.getCell(6)).trim();
-            // We'll resolve course ID during validation
+            String courseCode = getCellValue(row.getCell(5)).trim();
             student.setCourseId(courseCode);
             
-            String yearStr = getCellValue(row.getCell(7)).trim();
+            String yearStr = getCellValue(row.getCell(6)).trim();
             if (!yearStr.isEmpty()) {
                 student.setYear(Integer.parseInt(yearStr));
             }
             
-            student.setSection(getCellValue(row.getCell(8)).trim().toUpperCase());
+            student.setSection(getCellValue(row.getCell(7)).trim().toUpperCase());
             student.setIsActive(true);
             
         } catch (Exception e) {
@@ -243,18 +241,11 @@ public class ExcelUploadService {
                 }
             }
             
-            // Validate first name
-            if (student.getFirstName() == null || student.getFirstName().isEmpty()) {
-                errors.add("First name is required");
-            } else if (student.getFirstName().length() < 2 || student.getFirstName().length() > 50) {
-                errors.add("First name must be between 2 and 50 characters");
-            }
-            
-            // Validate last name
-            if (student.getLastName() == null || student.getLastName().isEmpty()) {
-                errors.add("Last name is required");
-            } else if (student.getLastName().length() < 2 || student.getLastName().length() > 50) {
-                errors.add("Last name must be between 2 and 50 characters");
+            // Validate name
+            if (student.getName() == null || student.getName().isEmpty()) {
+                errors.add("Name is required");
+            } else if (student.getName().length() < 2 || student.getName().length() > 100) {
+                errors.add("Name must be between 2 and 100 characters");
             }
             
             // Validate email

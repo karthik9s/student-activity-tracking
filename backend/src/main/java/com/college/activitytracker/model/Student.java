@@ -23,9 +23,7 @@ public class Student {
     @Indexed(unique = true)
     private String rollNumber;
     
-    private String firstName;
-    
-    private String lastName;
+    private String name;
     
     private String email;
     
@@ -56,15 +54,14 @@ public class Student {
     public Student() {
     }
 
-    public Student(String id, String userId, String rollNumber, String firstName, String lastName, 
+    public Student(String id, String userId, String rollNumber, String name,
                   String email, String phone, LocalDate dateOfBirth, String courseId, Integer year, 
                   String section, String profileImage, Boolean isActive, LocalDateTime createdAt, 
                   LocalDateTime updatedAt, LocalDateTime deletedAt) {
         this.id = id;
         this.userId = userId;
         this.rollNumber = rollNumber;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.name = name;
         this.email = email;
         this.phone = phone;
         this.dateOfBirth = dateOfBirth;
@@ -102,20 +99,12 @@ public class Student {
         this.rollNumber = rollNumber;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getName() {
+        return name;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {

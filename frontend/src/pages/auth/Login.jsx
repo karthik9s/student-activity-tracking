@@ -105,7 +105,7 @@ const Login = () => {
           onSubmit={handleSubmit}
         >
           {({ isSubmitting, setFieldValue }) => (
-            <Form className="login-form">
+            <Form className="login-form" autoComplete="on">
               <div className="form-group">
                 <label htmlFor="email">Email Address</label>
                 <div className="input-wrapper">
@@ -116,7 +116,7 @@ const Login = () => {
                     id="email"
                     className="form-input"
                     placeholder="your-email@gmail.com"
-                    autoComplete="email"
+                    autoComplete="username"
                   />
                 </div>
                 <ErrorMessage name="email" component="div" className="error-message" />

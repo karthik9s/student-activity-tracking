@@ -4,11 +4,12 @@ import {
   generateAttendanceReportPDF,
   generatePerformanceReportPDF,
   getLowAttendanceList,
+  getAttendanceReport,
   exportAttendanceCSV,
   exportPerformanceCSV,
 } from '../../api/endpoints/reportApi';
 import { getMyAllocations } from '../../api/endpoints/allocationApi';
-import { getAllSubjects } from '../../api/endpoints/subjectApi';
+import { getPerformanceBySubject } from '../../api/endpoints/performanceApi';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import './ReportsView.css';
 
@@ -22,14 +23,12 @@ const ReportsView = () => {
   });
   const [selectedSubject, setSelectedSubject] = useState('');
   const [allocations, setAllocations] = useState([]);
-  const [subjects, setSubjects] = useState([]);
   const [reportData, setReportData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [chartData, setChartData] = useState([]);
 
   useEffect(() => {
     fetchAllocations();
-    fetchSubjects();
   }, []);
 
   const fetchAllocations = async () => {
@@ -38,15 +37,6 @@ const ReportsView = () => {
       setAllocations(response.data);
     } catch (error) {
       console.error('Failed to fetch allocations');
-    }
-  };
-
-  const fetchSubjects = async () => {
-    try {
-      const response = await getAllSubjects({ page: 0, size: 100 });
-      setSubjects(response.data.content || []);
-    } catch (error) {
-      console.error('Failed to fetch subjects');
     }
   };
 
@@ -88,86 +78,141 @@ const ReportsView = () => {
   };
 
   const fetchAttendanceReport = async () => {
+    const allocation = allocations.find(a => a.subjectId === selectedSubject);
+    if (!allocation) {
+      toast.error('Allocation not found for selected subject');
+      return;
+    }
+
     const params = {
       subjectId: selectedSubject,
-      ...(dateRange.startDate && { startDate: dateRange.startDate }),
-      ...(dateRange.endDate && { endDate: dateRange.endDate }),
-    };
-
-    // For demo purposes, create mock data
-    const mockData = [
-      { studentName: 'John Doe', rollNumber: 'CS001', present: 45, absent: 5, percentage: 90 },
-      { studentName: 'Jane Smith', rollNumber: 'CS002', present: 42, absent: 8, percentage: 84 },
-      { studentName: 'Bob Johnson', rollNumber: 'CS003', present: 48, absent: 2, percentage: 96 },
-      { studentName: 'Alice Brown', rollNumber: 'CS004', present: 40, absent: 10, percentage: 80 },
-      { studentName: 'Charlie Wilson', rollNumber: 'CS005', present: 35, absent: 15, percentage: 70 },
-    ];
-
-    setReportData(mockData);
-
-    // Prepare chart data
-    const chartData = mockData.map(item => ({
-      name: item.rollNumber,
-      percentage: item.percentage,
-    }));
-    setChartData(chartData);
-  };
-
-  const fetchPerformanceReport = async () => {
-    // For demo purposes, create mock data
-    const mockData = [
-      { studentName: 'John Doe', rollNumber: 'CS001', midterm: 85, endterm: 90, assignment: 88, grade: 'A' },
-      { studentName: 'Jane Smith', rollNumber: 'CS002', midterm: 78, endterm: 82, assignment: 80, grade: 'B+' },
-      { studentName: 'Bob Johnson', rollNumber: 'CS003', midterm: 92, endterm: 95, assignment: 93, grade: 'A+' },
-      { studentName: 'Alice Brown', rollNumber: 'CS004', midterm: 70, endterm: 75, assignment: 72, grade: 'B' },
-      { studentName: 'Charlie Wilson', rollNumber: 'CS005', midterm: 65, endterm: 68, assignment: 66, grade: 'C+' },
-    ];
-
-    setReportData(mockData);
-
-    // Prepare grade distribution chart data
-    const gradeCount = mockData.reduce((acc, item) => {
-      acc[item.grade] = (acc[item.grade] || 0) + 1;
-      return acc;
-    }, {});
-
-    const chartData = Object.entries(gradeCount).map(([grade, count]) => ({
-      name: grade,
-      value: count,
-    }));
-    setChartData(chartData);
-  };
-
-  const fetchLowAttendanceReport = async () => {
-    const params = {
-      subjectId: selectedSubject,
-      threshold: 75,
+      courseId: allocation.courseId,
+      year: allocation.year,
+      section: allocation.section,
     };
 
     try {
-      const response = await getLowAttendanceList(params);
-      setReportData(response.data);
-
-      // Prepare chart data
-      const chartData = response.data.map(item => ({
-        name: item.rollNumber || item.studentName,
-        percentage: item.attendancePercentage || item.percentage,
+      const response = await getAttendanceReport(params);
+      const data = response.data.map(item => ({
+        studentName: item.name || item.studentName || 'N/A',
+        rollNumber: item.rollNumber || 'N/A',
+        present: item.present || 0,
+        absent: item.absent || 0,
+        percentage: Math.round(item.attendancePercentage || item.percentage || 0),
       }));
-      setChartData(chartData);
-    } catch (error) {
-      // Fallback to mock data
-      const mockData = [
-        { studentName: 'Charlie Wilson', rollNumber: 'CS005', percentage: 70, present: 35, absent: 15 },
-        { studentName: 'David Lee', rollNumber: 'CS006', percentage: 68, present: 34, absent: 16 },
-        { studentName: 'Emma Davis', rollNumber: 'CS007', percentage: 72, present: 36, absent: 14 },
-      ];
-      setReportData(mockData);
+      
+      setReportData(data);
 
-      const chartData = mockData.map(item => ({
+      const chartData = data.map(item => ({
         name: item.rollNumber,
         percentage: item.percentage,
       }));
       setChartData(chartData);
+    } catch (error) {
+      toast.error('Failed to fetch attendance report');
+      console.error('Attendance report error:', error);
+    }
+  };
+
+  const fetchPerformanceReport = async () => {
+    try {
+      const response = await getPerformanceBySubject(selectedSubject);
+      const performanceData = response.data;
+
+      if (!performanceData || performanceData.length === 0) {
+        toast.info('No performance data found for this subject');
+        setReportData([]);
+        setChartData([]);
+        return;
+      }
+
+      // Group by student and aggregate scores
+      const studentMap = {};
+      performanceData.forEach(record => {
+        if (!studentMap[record.studentId]) {
+          studentMap[record.studentId] = {
+            studentName: record.studentName || 'N/A',
+            rollNumber: record.rollNumber || 'N/A',
+            midterm: 0,
+            endterm: 0,
+            assignment: 0,
+            final: 0,
+            grade: 'N/A',
+          };
+        }
+        
+        // Map exam types to report columns
+        if (record.examType === 'INTERNAL') {
+          studentMap[record.studentId].midterm = record.marksObtained || 0;
+          studentMap[record.studentId].grade = record.grade || studentMap[record.studentId].grade;
+        } else if (record.examType === 'EXAM' || record.examType === 'FINAL') {
+          studentMap[record.studentId].endterm = record.marksObtained || 0;
+          studentMap[record.studentId].grade = record.grade || studentMap[record.studentId].grade;
+        } else if (record.examType === 'ASSIGNMENT') {
+          studentMap[record.studentId].assignment = record.marksObtained || 0;
+          studentMap[record.studentId].grade = record.grade || studentMap[record.studentId].grade;
+        }
+      });
+
+      const reportData = Object.values(studentMap);
+      setReportData(reportData);
+
+      // Prepare grade distribution chart data
+      const gradeCount = reportData.reduce((acc, item) => {
+        if (item.grade !== 'N/A') {
+          acc[item.grade] = (acc[item.grade] || 0) + 1;
+        }
+        return acc;
+      }, {});
+
+      const chartData = Object.entries(gradeCount).map(([grade, count]) => ({
+        name: grade,
+        value: count,
+      }));
+      setChartData(chartData);
+    } catch (error) {
+      toast.error('Failed to fetch performance report');
+      console.error('Performance report error:', error);
+    }
+  };
+
+  const fetchLowAttendanceReport = async () => {
+    const allocation = allocations.find(a => a.subjectId === selectedSubject);
+    if (!allocation) {
+      toast.error('Allocation not found for selected subject');
+      return;
+    }
+
+    const params = {
+      subjectId: selectedSubject,
+      courseId: allocation.courseId,
+      year: allocation.year,
+      section: allocation.section,
+      startDate: new Date(new Date().getFullYear(), 0, 1).toISOString().split('T')[0],
+      endDate: new Date().toISOString().split('T')[0],
+    };
+
+    try {
+      const response = await getLowAttendanceList(params);
+      const data = response.data.map(item => ({
+        studentName: item.name || item.studentName || 'N/A',
+        rollNumber: item.rollNumber || 'N/A',
+        percentage: Math.round(item.attendancePercentage || item.percentage || 0),
+        present: item.present || 0,
+        absent: item.absent || 0,
+      }));
+      
+      setReportData(data);
+
+      // Prepare chart data
+      const chartData = data.map(item => ({
+        name: item.rollNumber || item.studentName,
+        percentage: item.percentage,
+      }));
+      setChartData(chartData);
+    } catch (error) {
+      toast.error('Failed to fetch low attendance report');
+      console.error('Low attendance report error:', error);
     }
   };
 
@@ -177,11 +222,20 @@ const ReportsView = () => {
       return;
     }
 
+    const allocation = allocations.find(a => a.subjectId === selectedSubject);
+    if (!allocation) {
+      toast.error('Allocation not found for selected subject');
+      return;
+    }
+
     try {
       const params = {
         subjectId: selectedSubject,
-        ...(dateRange.startDate && { startDate: dateRange.startDate }),
-        ...(dateRange.endDate && { endDate: dateRange.endDate }),
+        courseId: allocation.courseId,
+        year: allocation.year,
+        section: allocation.section,
+        startDate: dateRange.startDate || new Date(new Date().getFullYear(), 0, 1).toISOString().split('T')[0],
+        endDate: dateRange.endDate || new Date().toISOString().split('T')[0],
       };
 
       let response;
@@ -214,22 +268,27 @@ const ReportsView = () => {
       return;
     }
 
-    try {
-      const params = {
-        subjectId: selectedSubject,
-        ...(dateRange.startDate && { startDate: dateRange.startDate }),
-        ...(dateRange.endDate && { endDate: dateRange.endDate }),
-      };
+    if (reportData.length === 0) {
+      toast.error('No data to export. Generate a report first.');
+      return;
+    }
 
-      let response;
+    try {
+      let csvContent = '';
+
       if (reportType === 'attendance' || reportType === 'low-attendance') {
-        response = await exportAttendanceCSV(params);
+        csvContent = 'RollNumber,Name,Present,Absent,Percentage\n';
+        reportData.forEach(row => {
+          csvContent += `${row.rollNumber},${row.studentName},${row.present},${row.absent},${row.percentage}%\n`;
+        });
       } else {
-        response = await exportPerformanceCSV(params);
+        csvContent = 'RollNumber,Name,Midterm,Endterm,Assignment,Grade\n';
+        reportData.forEach(row => {
+          csvContent += `${row.rollNumber},${row.studentName},${row.midterm},${row.endterm},${row.assignment},${row.grade}\n`;
+        });
       }
 
-      // Create blob and download
-      const blob = new Blob([response.data], { type: 'text/csv' });
+      const blob = new Blob([csvContent], { type: 'text/csv' });
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
@@ -246,8 +305,11 @@ const ReportsView = () => {
   };
 
   const getSubjectName = (subjectId) => {
-    const subject = subjects.find(s => s.id === subjectId);
-    return subject ? `${subject.code} - ${subject.name}` : 'Unknown';
+    const allocation = allocations.find(a => a.subjectId === subjectId);
+    if (allocation && allocation.subjectCode && allocation.subjectName) {
+      return `${allocation.subjectCode} - ${allocation.subjectName}`;
+    }
+    return 'Unknown';
   };
 
   return (
@@ -271,11 +333,16 @@ const ReportsView = () => {
             <label>Subject</label>
             <select value={selectedSubject} onChange={handleSubjectChange}>
               <option value="">Select Subject</option>
-              {allocations.map(allocation => (
-                <option key={allocation.id} value={allocation.subjectId}>
-                  {getSubjectName(allocation.subjectId)}
-                </option>
-              ))}
+              {allocations
+                .filter((allocation, index, self) => 
+                  index === self.findIndex(a => a.subjectId === allocation.subjectId)
+                )
+                .filter(allocation => allocation.subjectCode && allocation.subjectName)
+                .map(allocation => (
+                  <option key={allocation.subjectId} value={allocation.subjectId}>
+                    {allocation.subjectCode} - {allocation.subjectName}
+                  </option>
+                ))}
             </select>
           </div>
 

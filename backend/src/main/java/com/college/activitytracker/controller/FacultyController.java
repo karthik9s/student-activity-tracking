@@ -105,7 +105,7 @@ public class FacultyController {
     @Operation(summary = "Get performance by subject")
     public ResponseEntity<List<PerformanceDTO>> getPerformanceBySubject(
             @PathVariable String subjectId) {
-        List<PerformanceDTO> performance = performanceService.getPerformanceByStudentAndSubject(null, subjectId);
+        List<PerformanceDTO> performance = performanceService.getPerformanceBySubject(subjectId);
         return ResponseEntity.ok(performance);
     }
 
@@ -179,6 +179,20 @@ public class FacultyController {
         return ResponseEntity.ok()
                 .headers(headers)
                 .body(pdfBytes);
+    }
+
+    @GetMapping("/reports/attendance")
+    @Operation(summary = "Get attendance report for all students")
+    public ResponseEntity<List<java.util.Map<String, Object>>> getAttendanceReport(
+            @RequestParam String subjectId,
+            @RequestParam String courseId,
+            @RequestParam Integer year,
+            @RequestParam String section) {
+
+        List<java.util.Map<String, Object>> report = reportService.generateAttendanceReport(
+                subjectId, courseId, year, section);
+
+        return ResponseEntity.ok(report);
     }
 
     @GetMapping("/reports/low-attendance")
